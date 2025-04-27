@@ -19,5 +19,9 @@ $routes->group('api', function($routes) {
         $routes->post('/create', 'Api\ProjectController::create');
         $routes->put('(:num)', 'Api\ProjectController::update/$1');
         $routes->delete('(:num)', 'Api\ProjectController::delete/$1');
+
+        $routes->get('(:num)/members', 'Api\ProjectMemberController::index/$1');
+        $routes->post('(:num)/members', 'Api\ProjectMemberController::add/$1');
+        $routes->delete('(:num)/members/(:num)', 'Api\ProjectMemberController::remove/$1/$2');
     });
 });
