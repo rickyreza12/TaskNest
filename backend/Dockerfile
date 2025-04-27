@@ -8,10 +8,26 @@ RUN apk add --no-cache \
     zip \
     libzip-dev \
     icu-dev \
-    oniguruma-dev 
+    oniguruma-dev \
+    rabbitmq-c-dev \
+    autoconf \
+    gcc \
+    g++ \
+    make
 
-# Install extensions
-RUN docker-php-ext-install mysqli pdo pdo_mysql zip intl
+# Install PHP extensions
+RUN docker-php-ext-install \
+    bcmath \
+    sockets \
+    mysqli \
+    pdo \
+    pdo_mysql \
+    zip \
+    intl
+
+# Install php-amqp extension
+RUN pecl install amqp \
+    && docker-php-ext-enable amqp
 
 #install Composer
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer

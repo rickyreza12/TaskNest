@@ -17,7 +17,7 @@ $routes->group('api', function($routes) {
     // Project routes
     $routes->group('projects', ['filter' => 'jwtauth'], function($routes) {
         $routes->post('/', 'Api\ProjectController::index');
-        $routes->post('/create', 'Api\ProjectController::create');
+        $routes->post('create', 'Api\ProjectController::create');
         $routes->put('(:num)', 'Api\ProjectController::update/$1');
         $routes->delete('(:num)', 'Api\ProjectController::delete/$1');
 
@@ -35,10 +35,15 @@ $routes->group('api', function($routes) {
         $routes->delete('(:num)', 'Api\TaskController::delete/$1');
     });
 
-    // Focues routes
-    $routes->group('focus', ['filter' => 'jwt'], function($routes) {
+    // Focus routes
+    $routes->group('focus', ['filter' => 'jwtauth'], function($routes) {
         $routes->get('/', 'Api\FocusController::index');
         $routes->post('start/(:num)', 'Api\FocusController::start/$1');
         $routes->post('end/(:num)', 'Api\FocusController::end/$1');
     });
+
+    // Notification routes (no double 'api')
+    $routes->post('notifications/trigger', 'Api\NotificationController::trigger', ['filter' => 'jwtauth']);
+
+    
 });
