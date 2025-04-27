@@ -9,6 +9,7 @@ services:
       dockerfile: Dockerfile
     volumes:
       - ../backend/projects:/var/www/html
+      - ../backend/.env:/var/www/html/.env
     expose:
       - "9000"
   nginx:
