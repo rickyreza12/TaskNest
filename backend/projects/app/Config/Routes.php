@@ -34,4 +34,11 @@ $routes->group('api', function($routes) {
         $routes->put('(:num)', 'Api\TaskController::update/$1');
         $routes->delete('(:num)', 'Api\TaskController::delete/$1');
     });
+
+    // Focues routes
+    $routes->group('focus', ['filter' => 'jwt'], function($routes) {
+        $routes->get('/', 'Api\FocusController::index');
+        $routes->post('start/(:num)', 'Api\FocusController::start/$1');
+        $routes->post('end/(:num)', 'Api\FocusController::end/$1');
+    });
 });
