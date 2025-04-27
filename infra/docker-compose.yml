@@ -38,3 +38,15 @@ services:
     command: sh
     tty: true
     stdin_open: true
+  rabbitmq:
+    container_name: tasknest-rabbitmq
+    image: rabbitmq:3-management
+    build: 
+      context: ./rabbitmq
+      dockerfile: Dockerfile
+    ports:
+      - "567:5672"
+      - "15672:15672"
+    environment:
+      RABBITMQ_DEFAULT_USER: tasknestadmin
+      RABBITMQ_DEFAULT_PASS: controlroom
