@@ -1,0 +1,12 @@
+# ----------------
+node_modules
+.git
+.gitignore
+Dockerfile
+README.md
+tsconfig.json
+package-lock.json
+tsconfig.node.json
+vite.config.ts
+.env
+# ----------------

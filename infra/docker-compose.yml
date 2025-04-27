@@ -7,21 +7,34 @@ services:
     build: 
       context: ../backend
       dockerfile: Dockerfile
+    volumes:
+      - ../backend/projects:/var/www/html
+    expose:
+      - "9000"
+  nginx:
+    container_name: tasknest-nginx
+    image: nginx:alpine
     ports:
       - "8080:80"
     volumes:
       - ../backend/projects:/var/www/html
-    env_file:
-      - ../backend/.env
+      - ./nginx/default.conf:/etc/nginx/conf.d/default.conf
+    depends_on:
+      - backend
   frontend:
     container_name: tasknest-frontend-app
     image: tasknest-frontend-app:latest
     build: 
       context: ../frontend
       dockerfile: Dockerfile
+    working_dir: /app
     ports:
       - "5173:5173"
     volumes: 
       - ../frontend:/app
+      - /app/node_modules
     env_file:
       - ../frontend/.env
+    command: sh
+    tty: true
+    stdin_open: true
