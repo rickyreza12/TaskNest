@@ -14,14 +14,24 @@ $routes->group('api', function($routes) {
         $routes->post('login', 'Api\AuthController::login');
     });
 
+    // Project routes
     $routes->group('projects', ['filter' => 'jwtauth'], function($routes) {
         $routes->post('/', 'Api\ProjectController::index');
         $routes->post('/create', 'Api\ProjectController::create');
         $routes->put('(:num)', 'Api\ProjectController::update/$1');
         $routes->delete('(:num)', 'Api\ProjectController::delete/$1');
 
-        $routes->get('(:num)/members', 'Api\ProjectMemberController::index/$1');
-        $routes->post('(:num)/members', 'Api\ProjectMemberController::add/$1');
+        // Project Members nested
+        $routes->post('(:num)/members', 'Api\ProjectMemberController::index/$1');
+        $routes->post('(:num)/members/add', 'Api\ProjectMemberController::add/$1');
         $routes->delete('(:num)/members/(:num)', 'Api\ProjectMemberController::remove/$1/$2');
+    });
+
+     // Task routes
+     $routes->group('tasks', ['filter' => 'jwtauth'], function($routes) {
+        $routes->get('/', 'Api\TaskController::index');
+        $routes->post('/', 'Api\TaskController::create');
+        $routes->put('(:num)', 'Api\TaskController::update/$1');
+        $routes->delete('(:num)', 'Api\TaskController::delete/$1');
     });
 });
