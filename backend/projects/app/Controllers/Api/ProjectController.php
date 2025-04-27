@@ -183,4 +183,74 @@ class ProjectController extends BaseController
             return apiResponse(false, 'Exception: Failed to delete project', ['error' => $e->getMessage()]);
         }
     }
+
+    public function invite($id)
+    {
+        $rules = [
+            'email' => 'required|valid_email',
+        ];
+
+        if (! $this->validate($rules)) {
+            return apiResponse(false, 'Validation error', $this->validator->getErrors());
+        }
+
+        $db = \Config\Database::connect();
+        $db->transStart();
+
+        try {
+            $userId = $this->request->user['uid'] ?? null;
+            if (!$userId) {
+                return apiResponse(false, 'Unauthorized')->setStatusCode(401);
+            }
+
+            $projectModel = new \App\Models\ProjectModel();
+            $memberModel = new \App\Models\ProjectMemberModel();
+            $userModel = new \App\Models\UserModel();
+
+            // Check if project exists and user is owner
+            $project = $projectModel->where('owner_id', $userId)->find($id);
+
+            if (! $project) {
+                return apiResponse(false, 'Project not found or you are not the owner')->setStatusCode(404);
+            }
+
+            // Check if invited user exists
+            $invitedUser = $userModel->where('email', $this->request->getPost('email'))->first();
+
+            if (! $invitedUser) {
+                return apiResponse(false, 'User with this email not found')->setStatusCode(404);
+            }
+
+            // Check if user is already a member
+            $existingMember = $memberModel
+                ->where('project_id', $id)
+                ->where('user_id', $invitedUser['id'])
+                ->first();
+
+            if ($existingMember) {
+                return apiResponse(false, 'User is already a member of this project');
+            }
+
+            // Insert into project_members table
+            $memberModel->insert([
+                'project_id' => $id,
+                'user_id'    => $invitedUser['id'],
+                'role'       => 'member', // optional: you can add roles like member, admin, etc
+            ]);
+
+            if ($db->transStatus() === false) {
+                $db->transRollback();
+                return apiResponse(false, 'Failed to invite user');
+            }
+
+            $db->transCommit();
+            return apiResponse(true, 'User invited successfully');
+
+        } catch (\Exception $e) {
+            $db->transRollback();
+            log_message('error', '[INVITE PROJECT ERROR] ' . $e->getMessage());
+            return apiResponse(false, 'Exception: Failed to invite user', ['error' => $e->getMessage()]);
+        }
+    }
+
 }
