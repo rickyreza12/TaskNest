@@ -24,7 +24,14 @@ class ProjectController extends BaseController
             $page = (int) $this->request->getGet('page') ?? 1;
             $perPage = (int) $this->request->getGet('perPage') ?? 10;
 
-            $builder = $projectModel->where('owner_id', $userId);
+            if ($perPage <= 0) {
+                $perPage = 10;
+            }
+            if ($page <= 0) {
+                $page = 1;
+            }
+
+            // $builder = $projectModel->where('owner_id', $userId);
 
             if ($search) {
                 $builder->groupStart()
@@ -48,6 +55,7 @@ class ProjectController extends BaseController
                 ]
             ]);
         } catch (Exception $e) {
+            log_message('error', '[ProjectController:index] ' . $e->getMessage());
             return apiResponse(false, 'Failed to fetch projects', ['error' => $e->getMessage()]);
         }
     }
@@ -89,6 +97,7 @@ class ProjectController extends BaseController
             return apiResponse(true, 'Project created successfully', $data);
 
         } catch (Exception $e) {
+            log_message('error', '[ProjectController:index] ' . $e->getMessage());
             $db->transRollback();
             return apiResponse(false, 'Exception: Failed to create project', ['error' => $e->getMessage()]);
         }
@@ -134,6 +143,7 @@ class ProjectController extends BaseController
             return apiResponse(true, 'Project updated successfully');
 
         } catch (Exception $e) {
+            log_message('error', '[ProjectController:index] ' . $e->getMessage());
             $db->transRollback();
             return apiResponse(false, 'Exception: Failed to update project', ['error' => $e->getMessage()]);
         }
@@ -168,6 +178,7 @@ class ProjectController extends BaseController
             return apiResponse(true, 'Project deleted successfully');
 
         } catch (Exception $e) {
+            log_message('error', '[ProjectController:index] ' . $e->getMessage());
             $db->transRollback();
             return apiResponse(false, 'Exception: Failed to delete project', ['error' => $e->getMessage()]);
         }
