@@ -1,0 +1,27 @@
+version: '3.8'
+
+services:
+  backend: 
+    container_name: tasknest-backend-app
+    image: tasknest-backend-app:latest
+    build: 
+      context: ../backend
+      dockerfile: Dockerfile
+    ports:
+      - "8080:80"
+    volumes:
+      - ../backend/projects:/var/www/html
+    env_file:
+      - ../backend/.env
+  frontend:
+    container_name: tasknest-frontend-app
+    image: tasknest-frontend-app:latest
+    build: 
+      context: ../frontend
+      dockerfile: Dockerfile
+    ports:
+      - "5173:5173"
+    volumes: 
+      - ../frontend:/app
+    env_file:
+      - ../frontend/.env
