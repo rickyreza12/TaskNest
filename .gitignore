@@ -1,3 +1,4 @@
 .vscode
 .env
 *.bat
+Show-Tree.ps1

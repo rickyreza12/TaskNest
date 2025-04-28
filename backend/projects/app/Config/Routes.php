@@ -7,6 +7,16 @@ use CodeIgniter\Router\RouteCollection;
  */
 $routes->get('/', 'Home::index');
 
+// CORS Policy Fix
+$routes->options('(:any)', function() {
+    $response = service('response');
+    return $response
+        ->setHeader('Access-Control-Allow-Origin', '*')
+        ->setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization')
+        ->setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, DELETE')
+        ->setStatusCode(200);
+});
+
 // API routes
 $routes->group('api', function($routes) {
     $routes->group('auth', function($routes) {
