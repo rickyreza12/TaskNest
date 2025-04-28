@@ -21,6 +21,15 @@ const initialState: AuthState = {
   error: null
 };
 
+export const logoutUser = createAsyncThunk('auth/logout', async (_, thunkAPI) => {
+  try {
+    authService.logout();
+    return true;
+  } catch (error) {
+    return thunkAPI.rejectWithValue('Logout failed');
+  }
+});
+
 export const loginUser = createAsyncThunk(
     'auth/login',
     async (userData: { email: string; password: string }, thunkAPI) => {

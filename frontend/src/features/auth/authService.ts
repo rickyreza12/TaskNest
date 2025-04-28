@@ -11,4 +11,8 @@ export const authService = {
     const response = await axiosInstance.post('/auth/register', { name, email, password });
     return response.data;
   },
+
+  async logout(){
+    localStorage.removeItem('token')
+  }
 };
