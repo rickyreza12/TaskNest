@@ -18,11 +18,11 @@ class ProjectController extends BaseController
                 return apiResponse(false, 'Unauthorized')->setStatusCode(401);
             }
 
-            $search = $this->request->getGet('search');
-            $sort = $this->request->getGet('sort') ?? 'created_at';
-            $order = $this->request->getGet('order') ?? 'desc';
-            $page = (int) $this->request->getGet('page') ?? 1;
-            $perPage = (int) $this->request->getGet('perPage') ?? 10;
+            $search = $this->request->getPost('search');
+            $sort = $this->request->getPost('sort') ?? 'created_at';
+            $order = $this->request->getPost('order') ?? 'desc';
+            $page = (int) $this->request->getPost('page') ?? 1;
+            $perPage = (int) $this->request->getPost('perPage') ?? 10;
 
             if ($perPage <= 0) {
                 $perPage = 10;
@@ -31,7 +31,10 @@ class ProjectController extends BaseController
                 $page = 1;
             }
 
-            // $builder = $projectModel->where('owner_id', $userId);
+            $builder = $projectModel
+                ->select('projects.*, users.name as owner_name')
+                ->join('users', 'users.id = projects.owner_id')
+                ->where('owner_id', $userId);
 
             if ($search) {
                 $builder->groupStart()

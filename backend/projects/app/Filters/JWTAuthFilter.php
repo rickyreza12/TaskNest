@@ -12,10 +12,16 @@ class JWTAuthFilter implements FilterInterface
 {
     public function before(RequestInterface $request, $arguments = null)
     {
+        helper('api');
+
         $authHeader = $request->getHeaderLine('Authorization');
 
-        if (!$authHeader || !str_starts_with($authHeader, 'Bearer ')) {
-            return apiResponse(false, 'Unauthorized', null)->setStatusCode(401);
+        if (!$authHeader) {
+            return apiResponse(false, 'Missing Authorization header')->setStatusCode(401);
+        }
+
+        if (!str_starts_with($authHeader, 'Bearer ')) {
+            return apiResponse(false, 'Invalid Authorization format')->setStatusCode(401);
         }
 
         $token = str_replace('Bearer ', '', $authHeader);
