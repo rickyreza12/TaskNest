@@ -5,10 +5,20 @@ interface Project {
   id: number;
   name: string;
   description: string;
+  owner: boolean;
+  owner_name: string;
 }
 
 interface ProjectState {
   projects: Project[];
+}
+
+export interface FilterProject {
+  search?: string;
+  sort?: string;
+  order?: string;
+  page?: number;
+  perPage?: number;
 }
 
 const initialState: ProjectState = {
