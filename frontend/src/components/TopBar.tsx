@@ -1,6 +1,6 @@
 import { Bell, LogOut, Sun, Menu } from "lucide-react";
-import { useDispatch } from "react-redux";
-import { AppDispatch } from "../app/store";
+import { useDispatch, useSelector } from "react-redux";
+import { AppDispatch, RootState } from "../app/store";
 import { useNavigate } from "react-router-dom";
 import { logoutUser } from "../features/auth/authSlice";
 import { useState } from "react";
@@ -13,6 +13,9 @@ const Topbar = ({ onToggleSidebar }: TopbarProps) => {
   const dispatch = useDispatch<AppDispatch>();
   const navigate = useNavigate();
   const [isLoggingOut, setIsLoggingOut] = useState(false);
+
+  const userName = useSelector((state: RootState) => state.auth.user?.name) || "User";
+
 
   const handleLogout = async () => {
     setIsLoggingOut(true);
@@ -42,7 +45,7 @@ const Topbar = ({ onToggleSidebar }: TopbarProps) => {
           <button onClick={onToggleSidebar} className="text-white hover:text-[#6667EC] md:hidden">
             <Menu size={24} />
           </button>
-          <h1 className="text-xl text-white font-bold hidden md:block">Welcome back, User!</h1>
+          <h1 className="text-xl text-white font-bold hidden md:block">Welcome back, {userName}!</h1>
         </div>
 
         {/* Right side */}

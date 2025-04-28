@@ -34,6 +34,12 @@ const LoginPage = () => {
     }
   };
   
+  const handleResgister = async () => {
+    setIsLogginIn(true)
+    await new Promise((resolve) => setTimeout(resolve, 2000));
+    navigate('/register')
+    setIsLogginIn(false)
+  }
 
   return (
     <>
@@ -112,7 +118,7 @@ const LoginPage = () => {
               </button>
 
               <p className="text-gray-400 text-center mt-4 text-sm">
-                Don’t have an account? <a href="/register" className="text-[#6667ec] hover:underline">Click here</a>
+                Don’t have an account? <a href="/register" className="text-[#6667ec] hover:underline" onClick={handleResgister}>Click here</a>
               </p>
 
             </form>
